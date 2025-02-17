@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from c import add_carro
 from delete import delete
+from read import read
 
 app = Flask(__name__)
 
@@ -46,9 +47,20 @@ def delete_carro(id):
     except Exception as e:
         return jsonify({'message': f'Erro ao deletar carro: {str(e)}'}), 500
     
+
+@app.route('/api/carros', methods=['GET'])
+def get_carros():
+    try:
+        carros = read()
+        if not carros:
+            return jsonify({'message': 'Nenhum carro encontrado'}), 404
+        else:
+            return jsonify({'message': 'Carros encontrados', 'carros': carros}), 200
+    except Exception as e:
+        return jsonify({'message': f'Erro ao buscar carros: {str(e)}'}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 
